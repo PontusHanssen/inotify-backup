@@ -21,10 +21,10 @@ void check_dir(char *search_dir, int fd)
 		        {
 				if(ent->d_name[0] != '.' || strlen(ent->d_name)>2)
 				{
-				/*
+				
 				printf("Letar i mappen %s\n", search_dir);
 				printf("Hittade den nya mappen %s\n", ent->d_name);
-				*/
+				
 
 				char *directory = malloc(strlen(search_dir) + strlen(ent->d_name) + 2);
 				strcpy(directory,search_dir);
@@ -90,15 +90,18 @@ while(1)
                                 	strcat(new_dir,"/");
                                 	strcat(new_dir,event->name);
 					check_dir(new_dir,fd);
+					/* Skapa en mapp på servern */
 				}
 				else
 				{
 					printf("Filen %s skapades.\n", event->name);
+					/* Skapa fil på server */
 				}
 			}
 			else if(event->mask & IN_MODIFY)
 			{
 				printf("Filen %s ändrades.\n", event->name);
+				/* Uppdatera filen på servern */
 			}
 			else if(event->mask & IN_DELETE)
 			{
@@ -106,10 +109,12 @@ while(1)
 				{
 					printf("Mappen %s togs bort.\n", event->name);
 					inotify_rm_watch(fd, event->wd);
+					/* Ta bort mappen på servern */
 				}
 				else
 				{
 					printf("Filen %s togs bort.\n", event->name);
+					/* Ta bort filen på servern */
 				}
 			}
 		}
